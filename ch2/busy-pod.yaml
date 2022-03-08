@@ -1,0 +1,36 @@
+# chrono @ 2022-04
+
+# kubectl apply -f busy-pod.yml
+# kubectl logs busy-pod
+# kubectl delete -f busy-pod.yaml
+# kubectl delete pod busy-pod
+
+# kubectl explain pod.spec
+# kubectl explain pod.spec.containers
+# kubectl explain pod.spec.containers.env
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busy-pod
+  labels:
+    owner: chrono
+    env: demo
+    region: north
+    tier: back
+
+spec:
+  containers:
+  - image: busybox:latest
+    name: busy
+    imagePullPolicy: IfNotPresent
+    env:
+      - name: os
+        value: "ubuntu"
+      - name: debug
+        value: "on"
+    command:
+      - /bin/echo
+    args:
+      - "$(os), $(debug)"
+  #restartPolicy: Never

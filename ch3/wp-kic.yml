@@ -1,0 +1,117 @@
+# chrono @ 2022-05
+
+# https://docs.nginx.com/nginx-ingress-controller/
+
+# kubectl port-forward -n nginx-ingress wp-kic-dep-78f8c64fd4-h9n9r 8080:80 &
+# curl 127.1:8080/nginx-health
+# kubectl port-forward -n nginx-ingress ngx-kic-dep-8859b7b86-6rl2f 8081:8081 &
+# curl 127.1:8081/nginx-ready
+# kubectl port-forward -n nginx-ingress ngx-kic-dep-8859b7b86-6rl2f 8088:8080 &
+# curl 127.1:8088/stub_status
+
+# kubectl expose -n nginx-ingress deploy wp-kic-dep --port=80 --type=NodePort $out
+# curl --resolve wp.test:30080:192.168.10.210 wp.test:30080
+
+# sudo vi /etc/hosts, add wp.test
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wp-kic-dep
+  namespace: nginx-ingress
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wp-kic-dep
+
+  template:
+    metadata:
+      labels:
+        app: wp-kic-dep
+     #annotations:
+       #prometheus.io/scrape: "true"
+       #prometheus.io/port: "9113"
+       #prometheus.io/scheme: http
+    spec:
+      serviceAccountName: nginx-ingress
+
+      # use host network
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+
+      containers:
+      #- image: nginx/nginx-ingress:2.2.0
+      - image: nginx/nginx-ingress:2.2-alpine
+        imagePullPolicy: IfNotPresent
+        name: nginx-ingress
+        ports:
+        - name: http
+          containerPort: 80
+        - name: https
+          containerPort: 443
+        - name: readiness-port
+          containerPort: 8081
+        - name: prometheus
+          containerPort: 9113
+        readinessProbe:
+          httpGet:
+            path: /nginx-ready
+            port: readiness-port
+          periodSeconds: 1
+        securityContext:
+          allowPrivilegeEscalation: true
+          runAsUser: 101 #nginx
+          capabilities:
+            drop:
+            - ALL
+            add:
+            - NET_BIND_SERVICE
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        args:
+          - -ingress-class=wp-ink
+          - -health-status
+          - -ready-status
+          - -nginx-status
+          - -enable-snippets
+
+          - -nginx-configmaps=$(POD_NAMESPACE)/nginx-config
+          - -default-server-tls-secret=$(POD_NAMESPACE)/default-server-secret
+         #- -v=3 # Enables extensive logging. Useful for troubleshooting.
+         #- -report-ingress-status
+         #- -external-service=nginx-ingress
+         #- -enable-prometheus-metrics
+         #- -global-configuration=$(POD_NAMESPACE)/nginx-configuration
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wp-kic-svc
+  namespace: nginx-ingress
+
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30080
+
+  selector:
+    app: wp-kic-dep
+  type: NodePort
+
+---
+

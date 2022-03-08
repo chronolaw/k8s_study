@@ -1,0 +1,42 @@
+# chrono @ 2022-04
+
+# kubectl apply  -f mariadb-pod.yml
+# kubectl delete -f mariadb-pod.yml
+
+# you can change it to secret
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maria-cm
+
+data:
+  DATABASE: 'db'
+  USER: 'wp'
+  PASSWORD: '123'
+  ROOT_PASSWORD: '123'
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: maria-pod
+  labels:
+    app: wordpress
+    role: database
+
+spec:
+  containers:
+  - image: mariadb:10
+    name: maria
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 3306
+
+    envFrom:
+    - prefix: 'MARIADB_'
+      configMapRef:
+        name: maria-cm
+
+---
+

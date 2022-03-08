@@ -1,0 +1,41 @@
+# chrono @ 2022-04
+
+# kubectl explain pod.spec.containers.env.valueFrom
+
+# kubectl explain pod.spec.volumes
+# kubectl explain pod.spec.containers.volumeMounts
+
+# kubectl apply -f vol-pod.yml
+# kubectl get pod
+# kubectl exec -it vol-pod -- sh
+
+# in Pod:
+# cat /tmp/cm-items/greeting
+# cat /tmp/sec-items/db
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vol-pod
+
+spec:
+  volumes:
+  - name: cm-vol
+    configMap:
+      name: info
+  - name: sec-vol
+    secret:
+      secretName: user
+
+  containers:
+  - volumeMounts:
+    - mountPath: /tmp/cm-items
+      name: cm-vol
+    - mountPath: /tmp/sec-items
+      name: sec-vol
+
+    image: busybox
+    name: busy
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sleep", "300"]
+

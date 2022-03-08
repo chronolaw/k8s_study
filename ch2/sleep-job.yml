@@ -1,0 +1,28 @@
+# chrono @ 2022-04
+
+# kubectl apply -f sleep-job.yml
+# kubectl delete -f sleep-job.yml
+# kubectl get pod -w
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sleep-job
+
+spec:
+  activeDeadlineSeconds: 15
+  backoffLimit: 2
+  completions: 4
+  parallelism: 2
+
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - image: busybox
+        name: echo-job
+        imagePullPolicy: IfNotPresent
+        command:
+          - sh
+          - -c
+          - sleep $(($RANDOM % 10 + 1)) && echo done

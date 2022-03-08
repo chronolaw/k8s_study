@@ -1,0 +1,82 @@
+# chrono @ 2022-05
+
+# kubectl expose deploy wp-dep --port=80 $out
+
+# kubectl apply  -f wp-dep.yml
+# kubectl delete -f wp-dep.yml
+
+---
+
+# you can change it to secret
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wp-cm
+
+data:
+  HOST: 'maria-svc'
+  USER: 'wp'
+  PASSWORD: '123'
+  NAME: 'db'
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: wp-dep
+  name: wp-dep
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: wp-dep
+
+  template:
+    metadata:
+      labels:
+        app: wp-dep
+    spec:
+      containers:
+      - image: wordpress:5
+        name: wordpress
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 80
+
+        envFrom:
+        - prefix: 'WORDPRESS_DB_'
+          configMapRef:
+            name: wp-cm
+
+        #env:
+        #- name: WORDPRESS_CONFIG_EXTRA
+        #  value: |
+        #    define('WP_HOME', 'http://'.$_SERVER['HTTP_ORIGIN']);
+        #    define('WP_SITEURL', 'http://'.$_SERVER['HTTP_ORIGIN']);
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: wp-dep
+  name: wp-svc
+
+spec:
+  ports:
+  - name: http80
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30088
+
+  selector:
+    app: wp-dep
+  type: NodePort
+
+---
+

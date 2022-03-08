@@ -1,0 +1,19 @@
+# chrono @ 2022-04
+
+# export out="--dry-run=client -o yaml"
+
+# kubectl create cm info --from-literal=k=v $out
+# kubectl apply  -f cm.yml
+# kubectl delete -f cm.yml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: info
+
+data:
+  count: '10'
+  debug: 'on'
+  path: '/etc/systemd'
+  greeting: |
+    say hello to kubernetes.

@@ -1,0 +1,25 @@
+# chrono @ 2022-04
+
+# export out="--dry-run=client -o yaml"
+
+# kubectl create cj echo-cj --image=busybox --schedule="" $out
+# kubectl apply -f cronjob.yml
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: echo-cj
+
+spec:
+  schedule: '*/1 * * * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - image: busybox
+            name: echo-cj
+            imagePullPolicy: IfNotPresent
+            command: ["/bin/echo"]
+            args: ["hello", "world"]

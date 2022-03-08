@@ -1,0 +1,42 @@
+# chrono @ 2022-04
+
+# kubectl apply  -f wp-pod.yml
+# kubectl delete -f wp-pod.yml
+
+# you can change it to secret
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wp-cm
+
+data:
+  HOST: '172.17.0.2'
+  USER: 'wp'
+  PASSWORD: '123'
+  NAME: 'db'
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: wp-pod
+  labels:
+    app: wordpress
+    role: website
+
+spec:
+  containers:
+  - image: wordpress:5
+    name: wp-pod
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 80
+
+    envFrom:
+    - prefix: 'WORDPRESS_DB_'
+      configMapRef:
+        name: wp-cm
+
+---
+

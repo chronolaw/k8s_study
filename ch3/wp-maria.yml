@@ -1,0 +1,74 @@
+# chrono @ 2022-05
+
+# kubectl expose deploy maria-dep --port=3306 $out
+
+# kubectl apply  -f wp-maria.yml
+# kubectl delete -f wp-maria.yml
+
+# kubectl exec -it maria-dep-767bbdccb5-bh9vl -- mysql -u wp -p
+
+---
+
+# you can change it to secret
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maria-cm
+
+data:
+  DATABASE: 'db'
+  USER: 'wp'
+  PASSWORD: '123'
+  ROOT_PASSWORD: '123'
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: maria-dep
+  name: maria-dep
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maria-dep
+
+  template:
+    metadata:
+      labels:
+        app: maria-dep
+    spec:
+      containers:
+      - image: mariadb:10
+        name: mariadb
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+
+        envFrom:
+        - prefix: 'MARIADB_'
+          configMapRef:
+            name: maria-cm
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: maria-dep
+  name: maria-svc
+
+spec:
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+  selector:
+    app: maria-dep
+
+---
+

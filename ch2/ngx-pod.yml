@@ -1,0 +1,18 @@
+# chrono @ 2022-04
+
+# kubectl apply -f ngx-pod.yml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ngx-pod
+  labels:
+    env: demo
+    owner: chrono
+
+spec:
+  containers:
+  - image: nginx:alpine
+    name: ngx
+    ports:
+    - containerPort: 80

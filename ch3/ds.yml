@@ -1,0 +1,38 @@
+# chrono @ 2022-05
+
+# https://kubernetes.io/zh/docs/concepts/scheduling-eviction/taint-and-toleration/
+# https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/#toleration-v1-core
+
+# kubectl apply -f ds.yml
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: redis-ds
+  labels:
+    app: redis-ds
+
+spec:
+  selector:
+    matchLabels:
+      name: redis-ds
+
+  template:
+    metadata:
+      labels:
+        name: redis-ds
+
+    spec:
+      containers:
+      - name: redis5
+        image: redis:5-alpine
+        ports:
+        - containerPort: 6379
+
+      tolerations:
+      # this toleration is to have the daemonset runnable on master nodes
+      # remove it if your masters can't run pods
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+        operator: Exists
+

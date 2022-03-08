@@ -1,0 +1,22 @@
+# chrono @ 2022-04
+
+# export out="--dry-run=client -o yaml"
+
+# kubectl create job echo-job --image=busybox $out
+# kubectl apply -f job.yml
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: echo-job
+
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - image: busybox
+        name: echo-job
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/echo"]
+        args: ["hello", "world"]

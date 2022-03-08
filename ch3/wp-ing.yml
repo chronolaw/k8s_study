@@ -1,0 +1,51 @@
+# chrono @ 2022-05
+
+# kubectl create ing wp-ing --rule="wp.test/=wp-svc:80" $out
+# kubectl create ing wp-ing --rule="wp.test/=wp-svc:80" --class=wp-ink $out
+
+# https://docs.nginx.com/nginx-ingress-controller/
+
+# curl 127.1/nginx-health
+# curl 127.1:8081/nginx-ready
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: wp-ink
+
+spec:
+  controller: nginx.org/ingress-controller
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: wp-ing
+
+  # customize the behaviors of nginx
+  annotations:
+    nginx.org/lb-method: round_robin
+
+    nginx.org/location-snippets: |
+      #proxy_redirect ~^(http://[^:]+)(/.+)$ $1:30080$2;
+      #proxy_redirect   http://$host/ http://$host:30080/;
+
+spec:
+  ingressClassName: wp-ink
+
+  rules:
+  - host: wp.test
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: wp-svc
+            port:
+              number: 80
+---
+

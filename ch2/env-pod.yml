@@ -1,0 +1,48 @@
+# chrono @ 2022-04
+
+# kubectl explain pod.spec.containers.env.valueFrom
+
+# kubectl apply -f env-pod.yml
+# kubectl get pod
+# kubectl exec -it env-pod -- sh
+
+# in Pod:
+# echo $COUNT
+# echo $GREETING
+# echo $USERNAME
+# echo $PASSWORD
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: env-pod
+
+spec:
+  containers:
+  - env:
+      - name: COUNT
+        valueFrom:
+          configMapKeyRef:
+            name: info
+            key: count
+      - name: GREETING
+        valueFrom:
+          configMapKeyRef:
+            name: info
+            key: greeting
+      - name: USERNAME
+        valueFrom:
+          secretKeyRef:
+            name: user
+            key: name
+      - name: PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: user
+            key: pwd
+
+    image: busybox
+    name: busy
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sleep", "300"]
+

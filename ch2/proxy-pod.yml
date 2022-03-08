@@ -1,0 +1,76 @@
+# chrono @ 2022-04
+
+# kubectl apply -f proxy-pod.yml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: proxy-cm
+
+data:
+  default.conf: |
+    server {
+      listen 80;
+      default_type text/html;
+
+      location / {
+          proxy_http_version 1.1;
+          proxy_set_header Host $host;
+
+          # change to wordpress' ip addr
+          proxy_pass http://172.17.0.6;
+      }
+    }
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: proxy-pod
+  labels:
+    app: wordpress
+    role: proxy
+
+spec:
+  volumes:
+  - name: proxy-cm-vol
+    configMap:
+      name: proxy-cm
+
+  containers:
+  - image: nginx:alpine
+    name: ngx
+    imagePullPolicy: IfNotPresent
+    ports:
+    - containerPort: 80
+
+    volumeMounts:
+    - mountPath: /etc/nginx/conf.d
+      name: proxy-cm-vol
+
+---
+
+# kubectl expose pod proxy-pod --port=80 $out
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-svc
+  labels:
+    app: wordpress
+
+spec:
+  selector:
+    app: wordpress
+    role: proxy
+
+  type: NodePort
+
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30080
+
+---
+

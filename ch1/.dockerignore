@@ -1,0 +1,6 @@
+# docker ignore
+
+# https://docs.docker.com/engine/reference/builder/#dockerignore-file
+
+*.swp
+*.sh
