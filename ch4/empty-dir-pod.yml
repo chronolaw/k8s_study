@@ -1,0 +1,29 @@
+# chrono @ 2022-05
+#
+
+# kubectl exec -it empty-dir-pod -- sh
+# echo aaa > /tmp/a.txt
+#
+
+# pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: empty-dir-pod
+
+spec:
+
+  volumes:
+  - name: empty-dir-vol
+    emptyDir: {}
+
+  containers:
+    - name: empty-dir
+      image: nginx:alpine
+      ports:
+      - containerPort: 80
+
+      volumeMounts:
+      - name: empty-dir-vol
+        mountPath: /tmp
+

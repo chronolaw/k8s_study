@@ -54,6 +54,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 * [ingress](https://kubernetes.io/zh/docs/concepts/services-networking/ingress/)
 * [nginx-ingress-controller](https://docs.nginx.com/nginx-ingress-controller/)
 * [gateway](https://gateway-api.sigs.k8s.io/)
+* [persistent-volumes](https://kubernetes.io/zh/docs/concepts/storage/persistent-volumes/)
 
 ## Blogs
 

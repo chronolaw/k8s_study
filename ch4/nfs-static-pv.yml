@@ -1,0 +1,80 @@
+# chrono @ 2022-05
+#
+# https://kubernetes.io/zh/docs/concepts/storage/persistent-volumes/
+#
+#
+# kubectl exec -it nfs-1g-pod -- sh
+# echo aaa > /tmp/a.txt
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-1g-pv
+
+spec:
+
+  storageClassName: nfs
+
+  accessModes:
+    - ReadWriteMany
+  capacity:
+    storage: 1Gi
+
+  # you must write the right path
+  # in nfs server
+  # mkdir -p /tmp/nfs/1g-pv
+  nfs:
+    path: /tmp/nfs/1g-pv
+    server: 192.168.10.208
+
+---
+
+# pvc
+# try to find the most suitable pv
+# capacity/accessModes
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-static-pvc
+
+spec:
+
+  storageClassName: nfs
+
+  accessModes:
+    - ReadWriteMany
+
+  resources:
+    requests:
+      storage: 1Gi
+      #storage: 100Mi
+
+---
+
+# pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nfs-static-pod
+
+spec:
+
+  volumes:
+  - name: nfs-pvc-vol
+    persistentVolumeClaim:
+      claimName: nfs-static-pvc
+
+  containers:
+    - name: nfs-pvc-test
+      image: nginx:alpine
+      ports:
+      - containerPort: 80
+
+      volumeMounts:
+        - name: nfs-pvc-vol
+          mountPath: /tmp
+
+---
+

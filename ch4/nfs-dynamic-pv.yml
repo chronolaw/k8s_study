@@ -1,0 +1,50 @@
+# chrono @ 2022-05
+#
+# kubectl describe pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-dyn-10m-pvc
+
+spec:
+
+  # in class.yaml
+  storageClassName: nfs-client
+
+  accessModes:
+    - ReadWriteMany
+
+  resources:
+    requests:
+      storage: 10Mi
+
+---
+
+# pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nfs-dyn-pod
+
+spec:
+
+  volumes:
+  - name: nfs-dyn-10m-vol
+    persistentVolumeClaim:
+      claimName: nfs-dyn-10m-pvc
+
+  containers:
+    - name: nfs-dyn-test
+      image: nginx:alpine
+      ports:
+      - containerPort: 80
+
+      volumeMounts:
+        - name: nfs-dyn-10m-vol
+          mountPath: /tmp
+
+---
+

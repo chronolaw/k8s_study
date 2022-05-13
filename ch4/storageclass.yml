@@ -1,0 +1,30 @@
+# chrono @ 2022-05
+#
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: managed-nfs
+
+provisioner: k8s-sigs.io/nfs-subdir-external-provisioner
+parameters:
+  archiveOnDelete: "false"
+
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: retained-nfs
+
+provisioner: k8s-sigs.io/nfs-subdir-external-provisioner
+
+parameters:
+  onDelete: "retain"
+
+reclaimPolicy: Retain
+
+---
+

@@ -1,0 +1,78 @@
+# chrono @ 2022-05
+#
+# kubectl get pv
+# kubectl get pvc
+
+# kubectl exec -it host-pvc-pod -- sh
+# echo aaa > /tmp/a.txt
+#
+# check node's /tmp/host-10m-pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: host-10m-pv
+
+spec:
+  storageClassName: host-test
+
+  accessModes:
+  - ReadWriteOnce
+  capacity:
+    storage: 10Mi
+
+  # mkdir -p /tmp/host-10m-pv/
+  hostPath:
+    path: /tmp/host-10m-pv/
+
+---
+
+# pvc
+# try to find the most suitable pv
+# capacity/accessModes
+apiVersion: v1
+kind: PersistentVolumeClaim
+
+metadata:
+  name: host-5m-pvc
+
+spec:
+
+  storageClassName: host-test
+
+  accessModes:
+    - ReadWriteOnce
+
+  resources:
+    requests:
+      storage: 5Mi
+
+---
+
+# pod
+apiVersion: v1
+kind: Pod
+metadata:
+  name: host-pvc-pod
+
+spec:
+
+  volumes:
+  - name: host-pvc-vol
+    persistentVolumeClaim:
+      claimName: host-5m-pvc
+
+  containers:
+    - name: ngx-pvc-pod
+      image: nginx:alpine
+      ports:
+      - containerPort: 80
+
+      volumeMounts:
+      - name: host-pvc-vol
+        mountPath: /tmp
+
+---
+
