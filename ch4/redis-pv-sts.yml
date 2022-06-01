@@ -1,0 +1,67 @@
+# chrono @ 2022-06
+#
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-pv-sts
+
+spec:
+  # headless svc
+  serviceName: redis-pv-svc
+
+  # pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-100m-pvc
+    spec:
+      storageClassName: nfs-client
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 100Mi
+
+  replicas: 2
+  selector:
+    matchLabels:
+      app: redis-pv-sts
+
+  template:
+    metadata:
+      labels:
+        app: redis-pv-sts
+    spec:
+      containers:
+      - image: redis:5-alpine
+        name: redis
+        ports:
+        - containerPort: 6379
+
+        volumeMounts:
+        - name: redis-100m-pvc
+          mountPath: /data
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-pv-svc
+
+spec:
+  selector:
+    app: redis-pv-sts
+
+  # headless
+  clusterIP: None
+
+  ports:
+  - port: 6379
+    protocol: TCP
+    targetPort: 6379
+
+---
+

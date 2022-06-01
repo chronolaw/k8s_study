@@ -1,0 +1,58 @@
+# chrono @ 2022-06
+#
+# kubectl describe pv
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-50m-pvc
+
+spec:
+
+  # in class.yaml
+  storageClassName: nfs-client
+
+  accessModes:
+    - ReadWriteMany
+
+  resources:
+    requests:
+      storage: 50Mi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-dep
+
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-dep
+
+  template:
+    metadata:
+      labels:
+        app: redis-dep
+    spec:
+      volumes:
+      - name: redis-50m-vol
+        persistentVolumeClaim:
+          claimName: redis-50m-pvc
+
+      containers:
+      - image: redis:5-alpine
+        name: redis
+        ports:
+        - containerPort: 6379
+
+        volumeMounts:
+          - name: redis-50m-vol
+            mountPath: /data
+
+---
+

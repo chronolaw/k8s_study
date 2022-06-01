@@ -3,13 +3,18 @@ Follow me to study Docker/Kubernetes
 
 ## Requirements
 
-### docker/minikube
+### Host Machine
+| CPU  | Memory | Disk
+| -----|--------|-----
+| >= 4 | >= 8GB | >= 300GB
+
+### docker/minikube VM
 Environment | CPU | Memory | Disk
 ------------|---- |--------|-----
 docker      | >= 2| >= 2GB | >= 20GB
 minikube    | >= 2| >= 2GB | >= 20GB
 
-### kubernetes
+### kubernetes VM
 Environment | CPU | Memory | Disk
 ------------|---- |--------|-----
 master node | >= 2| >= 4GB | >= 40GB

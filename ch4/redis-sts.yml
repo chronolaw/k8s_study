@@ -1,0 +1,51 @@
+# chrono @ 2022-06
+#
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-sts
+
+spec:
+  # headless svc
+  serviceName: redis-svc
+
+  replicas: 2
+  selector:
+    matchLabels:
+      app: redis-sts
+
+  template:
+    metadata:
+      labels:
+        app: redis-sts
+    spec:
+      containers:
+      - image: redis:5-alpine
+        name: redis
+        ports:
+        - containerPort: 6379
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-svc
+
+spec:
+  selector:
+    app: redis-sts
+
+  # headless
+  clusterIP: None
+
+  ports:
+  - port: 6379
+    protocol: TCP
+    targetPort: 6379
+
+---
+
