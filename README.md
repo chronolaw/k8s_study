@@ -38,6 +38,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 * [kind](https://kind.sigs.k8s.io/)
 * [harbor](https://goharbor.io/)
 * [helm](https://helm.sh/)
+* [metrics-server](https://github.com/kubernetes-sigs/metrics-server)
 * [prometheus](https://www.cncf.io/projects/prometheus/)
 * [calico](https://www.tigera.io/project-calico/)
 * [cilium](https://cilium.io/)

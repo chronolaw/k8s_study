@@ -1,0 +1,79 @@
+# chrono @ 2022-06
+#
+# kubectl explain pod.spec.containers.startupProbe
+# kubectl explain pod.spec.containers.livenessProbe
+# kubectl explain pod.spec.containers.readinessProbe
+#
+# kubectl logs ngx-pod-probe -f
+
+---
+
+# this cm will be mounted to /etc/nginx/conf.d
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ngx-conf
+
+data:
+  default.conf: |
+    server {
+      listen 80;
+      location = /ready {
+        return 200 'I am ready';
+        #return 500 'I am not ready';
+      }
+      location / {
+        default_type text/plain;
+        return 200 "Nginx OK";
+      }
+    }
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ngx-pod-probe
+
+spec:
+  volumes:
+  - name: ngx-conf-vol
+    configMap:
+      name: ngx-conf
+
+  containers:
+  - image: nginx:alpine
+    name: ngx
+    ports:
+    - containerPort: 80
+
+    volumeMounts:
+    - mountPath: /etc/nginx/conf.d
+      name: ngx-conf-vol
+
+    # probes are here
+
+    startupProbe:
+      periodSeconds: 1
+      timeoutSeconds: 1
+      exec:
+        command: ["cat", "/var/run/nginx.pid"]
+        #command: ["cat", "nginx.pid"]  # wrong pid file
+
+    livenessProbe:
+      periodSeconds: 10
+      timeoutSeconds: 1
+      #failureThreshold: 1
+      tcpSocket:
+        #port: 80
+        port: 8080
+
+    readinessProbe:
+      periodSeconds: 5
+      timeoutSeconds: 1
+      httpGet:
+        path: /ready
+        port: 80
+
+---
+

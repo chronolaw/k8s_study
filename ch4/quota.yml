@@ -1,0 +1,63 @@
+# chrono @ 2022-06
+#
+# kubectl create ns dev-ns $out
+# kubectl create quota dev-qt $out
+#
+# kubectl explain quota.spec
+# kubectl describe -n dev-ns quota dev-qt
+#
+# kubectl explain limits.spec.limits
+#
+# kubectl run ngx --image=nginx:alpine -n dev-ns
+# kubectl describe pod ngx -n dev-ns
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-ns
+
+---
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dev-qt
+  namespace: dev-ns
+
+spec:
+  hard:
+    requests.cpu: 10
+    requests.memory: 10Gi
+    requests.storage: 100Gi
+    limits.cpu: 10
+    limits.memory: 20Gi
+
+    pods: 100
+    configmaps: 100
+    secrets: 100
+    services: 10
+    services.nodeports: 5
+    persistentvolumeclaims: 100
+
+---
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: dev-limits
+  namespace: dev-ns
+
+spec:
+  limits:
+  - type: Container
+    defaultRequest:
+      cpu: 200m
+      memory: 50Mi
+    default:
+      cpu: 500m
+      memory: 100Mi
+
+---
+
