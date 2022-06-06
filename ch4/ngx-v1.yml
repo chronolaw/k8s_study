@@ -1,0 +1,83 @@
+# chrono @ 2022-06
+
+# kubectl apply -f ngx-deploy.yml
+# kubectl port-forward svc/ngx-svc 8080:80 &
+# curl 127.1:8080
+
+# kubectl rollout status deployment ngx-dep
+# kubectl rollout history deployment ngx-dep
+
+---
+
+# this cm will be mounted to /etc/nginx/conf.d
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ngx-conf
+
+data:
+  default.conf: |
+    server {
+      listen 80;
+      location / {
+        default_type text/plain;
+        return 200
+          'ver : $nginx_version\nsrv : $server_addr:$server_port\nhost: $hostname\n';
+      }
+    }
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngx-dep
+  annotations:
+    kubernetes.io/change-cause: v1, ngx=1.21
+
+spec:
+  #minReadySeconds: 5
+
+  replicas: 4
+  selector:
+    matchLabels:
+      app: ngx-dep
+
+  template:
+    metadata:
+      labels:
+        app: ngx-dep
+    spec:
+      volumes:
+      - name: ngx-conf-vol
+        configMap:
+          name: ngx-conf
+
+      containers:
+      - image: nginx:1.21-alpine
+        name: nginx
+        ports:
+        - containerPort: 80
+
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: ngx-conf-vol
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngx-svc
+
+spec:
+  selector:
+    app: ngx-dep
+
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+
+---
+
