@@ -30,16 +30,21 @@ spec:
   hard:
     requests.cpu: 10
     requests.memory: 10Gi
-    requests.storage: 100Gi
     limits.cpu: 10
     limits.memory: 20Gi
+
+    requests.storage: 100Gi
+    persistentvolumeclaims: 100
 
     pods: 100
     configmaps: 100
     secrets: 100
     services: 10
     services.nodeports: 5
-    persistentvolumeclaims: 100
+
+    count/jobs.batch: 1
+    count/cronjobs.batch: 1
+    count/deployments.apps: 1
 
 ---
 
@@ -58,6 +63,10 @@ spec:
     default:
       cpu: 500m
       memory: 100Mi
+  - type: Pod
+    max:
+      cpu: 800m
+      memory: 200Mi
 
 ---
 

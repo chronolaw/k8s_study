@@ -1,0 +1,27 @@
+# chrono @ 2022-06
+#
+# kubectl create ns test-ns
+# kubectl run ngx --image=nginx:alpine
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ngx
+  namespace: test-ns
+
+spec:
+  containers:
+  - image: nginx:alpine
+    name: ngx
+
+---
+
