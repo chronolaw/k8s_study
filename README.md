@@ -6,7 +6,7 @@ Follow me to study Docker/Kubernetes
 ### Host Machine
 | CPU  | Memory | Disk
 | -----|--------|-----
-| >= 4 | >= 8GB | >= 300GB
+| >= 2 | >= 8GB | >= 100GB
 
 ### docker/minikube VM
 Environment | CPU | Memory | Disk
@@ -40,6 +40,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 * [helm](https://helm.sh/)
 * [metrics-server](https://github.com/kubernetes-sigs/metrics-server)
 * [prometheus](https://www.cncf.io/projects/prometheus/)
+* [grafana](https://grafana.com/)
 * [calico](https://www.tigera.io/project-calico/)
 * [cilium](https://cilium.io/)
 * [CNCF](https://www.cncf.io/)
@@ -50,6 +51,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 
 * [docker](https://docs.docker.com/)
 * [kubernetes](https://kubernetes.io/zh/docs/home/)
+* [prometheus](https://prometheus.io/docs/)
 * [yaml](https://yaml.org/spec/1.2.2/)
 * [minikube](https://kubernetes.io/zh/docs/tutorials/hello-minikube/)
 * [kubectl](https://kubernetes.io/zh/docs/reference/kubectl/overview/)
@@ -59,6 +61,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 * [pod](https://kubernetes.io/zh/docs/concepts/workloads/pods/)
 * [ingress](https://kubernetes.io/zh/docs/concepts/services-networking/ingress/)
 * [nginx-ingress-controller](https://docs.nginx.com/nginx-ingress-controller/)
+* [kong-ingress-controller](https://docs.konghq.com/kubernetes-ingress-controller/)
 * [gateway](https://gateway-api.sigs.k8s.io/)
 * [persistent-volumes](https://kubernetes.io/zh/docs/concepts/storage/persistent-volumes/)
 
