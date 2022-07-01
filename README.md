@@ -1,5 +1,5 @@
 # k8s_study
-Follow me to study Docker/Kubernetes
+[Follow me to study Docker/Kubernetes](https://time.geekbang.org/column/intro/100114501)
 
 ## Requirements
 
@@ -39,7 +39,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 * [harbor](https://goharbor.io/)
 * [helm](https://helm.sh/)
 * [metrics-server](https://github.com/kubernetes-sigs/metrics-server)
-* [prometheus](https://www.cncf.io/projects/prometheus/)
+* [prometheus](https://prometheus.io/)
 * [grafana](https://grafana.com/)
 * [calico](https://www.tigera.io/project-calico/)
 * [cilium](https://cilium.io/)
@@ -60,6 +60,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 * [kubernetes api v1.23](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.23/)
 * [pod](https://kubernetes.io/zh/docs/concepts/workloads/pods/)
 * [ingress](https://kubernetes.io/zh/docs/concepts/services-networking/ingress/)
+* [cni](https://github.com/containernetworking/cni)
 * [nginx-ingress-controller](https://docs.nginx.com/nginx-ingress-controller/)
 * [kong-ingress-controller](https://docs.konghq.com/kubernetes-ingress-controller/)
 * [gateway](https://gateway-api.sigs.k8s.io/)
