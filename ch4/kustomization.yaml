@@ -1,0 +1,11 @@
+# chrono @ 2022-07
+#
+# kubectl apply -k .
+# kubectl delete -k .
+
+resources:
+  - wp-maria.yml
+  - wp-dep.yml
+  - wp-ing.yml
+  - wp-kic.yml
+

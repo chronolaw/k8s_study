@@ -1,0 +1,95 @@
+# chrono @ 2022-07
+
+# kubectl apply  -f wp-maria.yml
+# kubectl delete -f wp-maria.yml
+
+# kubectl exec -it maria-sts-767bbdccb5-bh9vl -- mysql -u wp -p
+
+---
+
+# you can change it to secret
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: maria-cm
+
+data:
+  DATABASE: 'db'
+  USER: 'wp'
+  PASSWORD: '123'
+  ROOT_PASSWORD: '123'
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: maria-sts
+  name: maria-sts
+
+spec:
+  # headless svc
+  serviceName: maria-svc
+
+  # pvc
+  volumeClaimTemplates:
+  - metadata:
+      name: maria-100m-pvc
+    spec:
+      storageClassName: nfs-client
+      accessModes:
+        - ReadWriteMany
+      resources:
+        requests:
+          storage: 100Mi
+
+  replicas: 1
+  selector:
+    matchLabels:
+      app: maria-sts
+
+  template:
+    metadata:
+      labels:
+        app: maria-sts
+    spec:
+      containers:
+      - image: mariadb:10
+        name: mariadb
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3306
+
+        envFrom:
+        - prefix: 'MARIADB_'
+          configMapRef:
+            name: maria-cm
+
+        volumeMounts:
+        - name: maria-100m-pvc
+          mountPath: /var/lib/mysql
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: maria-sts
+  name: maria-svc
+
+spec:
+  selector:
+    app: maria-sts
+
+  # headless
+  clusterIP: None
+
+  ports:
+  - port: 3306
+    protocol: TCP
+    targetPort: 3306
+
+---
+
