@@ -1,0 +1,11 @@
+# chrono @ 2022-07
+#
+# kubectl apply -k .
+# kubectl delete -k .
+
+resources:
+  - dashboard.yaml
+  - admin.yml
+  - cert.yml
+  - ingress.yml
+  - kic.yml

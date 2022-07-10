@@ -1,0 +1,55 @@
+# chrono @ 2022-07
+#
+# kubectl create ing dash-ing --rule="k8s.test/=kubernetes-dashboard:443" --class=dash-ink -n kubernetes-dashboard $out
+# login kic pod, check /etc/nginx/conf.d/xxx.conf
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+
+metadata:
+  name: dash-ink
+  namespace: kubernetes-dashboard
+spec:
+  controller: nginx.org/ingress-controller
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  name: dash-ing
+  namespace: kubernetes-dashboard
+  annotations:
+    # enable proxy_pass https://xxx
+    nginx.org/ssl-services: "kubernetes-dashboard"
+
+    # customize port
+    #nginx.org/listen-ports-ssl: '8443'
+
+spec:
+  ingressClassName: dash-ink
+
+  # kubectl explain ingress.spec.tls
+  tls:
+    - hosts:
+      - k8s.test
+      # must in ns kubernetes-dashboard
+      secretName: dash-tls
+
+  rules:
+  - host: k8s.test
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            # same as dashboard.yml
+            name: kubernetes-dashboard
+            port:
+              number: 443
+
+
