@@ -1,0 +1,16 @@
+# chrono 2022-07
+#
+# docker-compose -f reg-compose.yml up -d
+# docker-compose -f reg-compose.yml ps
+# docker-compose -f reg-compose.yml down
+
+services:
+
+  registry:
+    image: registry
+    container_name: registry
+    restart: always
+
+    ports:
+      - 5000:5000
+

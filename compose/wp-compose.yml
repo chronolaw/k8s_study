@@ -1,0 +1,65 @@
+# chrono 2022-07
+#
+# docker-compose -f wp-compose.yml up -d
+# docker-compose -f wp-compose.yml ps
+# docker-compose -f wp-compose.yml exec -it mariadb sh
+# docker-compose -f wp-compose.yml exec -it nginx sh
+# docker-compose -f wp-compose.yml down
+
+volumes:
+  maria_data: {}
+
+#networks:
+#  wp-net:
+#    ipam:
+#      config:
+#      - subnet: 172.20.0.0/24
+#        gateway: 172.20.0.1
+
+services:
+
+  mariadb:
+    image: mariadb:10
+    container_name: mariadb
+    restart: always
+
+    environment:
+      MARIADB_DATABASE: db
+      MARIADB_USER: wp
+      MARIADB_PASSWORD: 123
+      MARIADB_ROOT_PASSWORD: 123
+    volumes:
+      - maria_data:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:5
+    container_name: wordpress
+    restart: always
+
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: wp
+      WORDPRESS_DB_PASSWORD: 123
+      WORDPRESS_DB_NAME: db
+    #networks:
+    #  wp-net:
+    #    ipv4_address: 172.20.0.110
+
+    depends_on:
+      - mariadb
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    hostname: nginx
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./wp.conf:/etc/nginx/conf.d/default.conf
+
+    depends_on:
+      - wordpress
+
+
+

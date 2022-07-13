@@ -1,5 +1,6 @@
 # k8s_study
-[Follow me to study Docker/Kubernetes](https://time.geekbang.org/column/intro/100114501)
+* [Follow me to study Docker/Kubernetes](https://time.geekbang.org/column/intro/100114501)
+* [Do we must learn/study Kubernetes?](https://www.bilibili.com/video/BV13t4y1a7vN)
 
 ## Requirements
 
@@ -50,6 +51,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 ## Docs
 
 * [docker](https://docs.docker.com/)
+* [docker-compose](https://docs.docker.com/compose/)
 * [kubernetes](https://kubernetes.io/zh/docs/home/)
 * [prometheus](https://prometheus.io/docs/)
 * [yaml](https://yaml.org/spec/1.2.2/)
