@@ -1,0 +1,43 @@
+# chrono @ 2022-07
+
+# kubectl create ing kong-ing --rule="kong.test/=ngx-svc:80" $out
+# kubectl create ing kong-ing --rule="kong.test/=ngx-svc:80" --class=kong-ink $out
+#
+# curl --resolve kong.dev:8000:127.0.0.1 kong.dev:8000 -v
+# curl --resolve kong.ops:8000:127.0.0.1 kong.ops:8000 -v
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: kong-ink
+
+spec:
+  controller: ingress-controllers.konghq.com/kong
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kong-ing
+  annotations:
+    konghq.com/host-aliases: "kong.dev,kong.ops"
+
+spec:
+  ingressClassName: kong-ink
+
+  rules:
+  - host: kong.test
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ngx-svc
+            port:
+              number: 80
+---
+

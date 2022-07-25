@@ -1,0 +1,10 @@
+# chrono @ 2022-07
+#
+# kubectl apply -k .
+# kubectl delete -k .
+
+resources:
+  - ngx-deploy.yml
+  - ingress.yml
+  - kic.yml
+
