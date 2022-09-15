@@ -5,6 +5,8 @@
 #   value: kong-ink
 # - name: CONTROLLER_PUBLISH_SERVICE
 #   value: kong/ingress-kong-proxy
+# - name: KONG_ROUTER_FLAVOR
+#   value: traditional_compatible
 
 # kubectl port-forward -n kong ingress-kong-dep-5656d6cfc4-lw472 8000:8000 &
 # curl --resolve kong.test:8000:127.0.0.1 kong.test:8000
@@ -29,10 +31,6 @@ spec:
       app: ingress-kong-dep
   template:
     metadata:
-      annotations:
-        kuma.io/gateway: enabled
-        kuma.io/service-account-token-volume: kong-serviceaccount-token
-        traffic.sidecar.istio.io/includeInboundPorts: ""
       labels:
         app: ingress-kong-dep
     spec:
@@ -60,7 +58,8 @@ spec:
         - name: KONG_PROXY_ERROR_LOG
           value: /dev/stderr
         - name: KONG_ROUTER_FLAVOR
-          value: traditional
+          value: traditional_compatible
+          #value: traditional
         image: kong:3.0
         lifecycle:
           preStop:
