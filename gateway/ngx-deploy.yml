@@ -1,0 +1,76 @@
+# chrono @ 2022-09
+
+# kubectl apply -f ngx-deploy.yml
+
+---
+
+# this cm will be mounted to /etc/nginx/conf.d
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ngx-conf
+
+data:
+  default.conf: |
+    server {
+      listen 80;
+      location / {
+        default_type text/plain;
+        return 200
+          'srv : $server_addr:$server_port\nhost: $hostname\nuri : $request_method $host $request_uri\ndate: $time_iso8601\n';
+      }
+    }
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ngx-dep
+  labels:
+    app: ngx-dep
+
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ngx-dep
+
+  template:
+    metadata:
+      labels:
+        app: ngx-dep
+    spec:
+      volumes:
+      - name: ngx-conf-vol
+        configMap:
+          name: ngx-conf
+
+      containers:
+      - image: nginx:alpine
+        name: nginx
+        ports:
+        - containerPort: 80
+
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d
+          name: ngx-conf-vol
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ngx-svc
+
+spec:
+  selector:
+    app: ngx-dep
+
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+
+---
+
