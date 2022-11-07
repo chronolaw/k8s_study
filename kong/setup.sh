@@ -2,7 +2,7 @@
 #
 # https://github.com/Kong/kubernetes-ingress-controller
 
-wget https://github.com/Kong/kubernetes-ingress-controller/archive/refs/tags/v2.6.0.tar.gz
+#wget https://github.com/Kong/kubernetes-ingress-controller/archive/refs/tags/v2.7.0.tar.gz
 
 kubectl apply -f all-in-one-dbless.yaml
 
