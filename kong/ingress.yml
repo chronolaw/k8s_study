@@ -3,6 +3,8 @@
 # kubectl create ing kong-ing --rule="kong.test/=ngx-svc:80" $out
 # kubectl create ing kong-ing --rule="kong.test/=ngx-svc:80" --class=kong-ink $out
 #
+# kubectl port-forward -n kong ingress-kong-dep-dc785bd49-2f7dw 8000 &
+#
 # curl --resolve kong.dev:8000:127.0.0.1 kong.dev:8000 -v
 # curl --resolve kong.ops:8000:127.0.0.1 kong.ops:8000 -v
 
