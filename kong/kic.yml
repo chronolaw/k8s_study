@@ -1,4 +1,4 @@
-# chrono @ 2022-07
+# chrono @ 2022-12
 
 # https://docs.konghq.com/kubernetes-ingress-controller/latest/references/annotations/
 # - name: CONTROLLER_INGRESS_CLASS
@@ -60,7 +60,7 @@ spec:
         - name: KONG_ROUTER_FLAVOR
           value: traditional_compatible
           #value: traditional
-        image: kong:3.0
+        image: kong:3.1
         lifecycle:
           preStop:
             exec:
@@ -189,3 +189,4 @@ spec:
   type: NodePort
 
 ---
+

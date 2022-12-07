@@ -24,8 +24,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: kong-ing
-  annotations:
-    konghq.com/host-aliases: "kong.dev,kong.ops"
 
 spec:
   ingressClassName: kong-ink

@@ -17,7 +17,7 @@ data:
       location / {
         default_type text/plain;
         return 200
-          'srv : $server_addr:$server_port\nhost: $hostname\nuri : $request_method $host $request_uri\ndate: $time_iso8601\n';
+          'srv : $server_addr:$server_port\nhost: $hostname\nuri : $request_method $host $request_uri\n';
       }
     }
 
@@ -58,24 +58,10 @@ spec:
 
 ---
 
-apiVersion: configuration.konghq.com/v1
-kind: KongPlugin
-metadata:
-  name: response-transformer-plugin
-config:
-  add:
-    headers:
-    - Kong-New-Header:kong-kic
-plugin: response-transformer
-
----
-
 apiVersion: v1
 kind: Service
 metadata:
   name: ngx-svc
-  annotations:
-    konghq.com/plugins: response-transformer-plugin
 
 spec:
   selector:

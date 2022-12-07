@@ -1,0 +1,89 @@
+# chrono @ 2022-12
+
+# https://docs.konghq.com/kubernetes-ingress-controller/2.7.x/references/annotations/
+# https://docs.konghq.com/kubernetes-ingress-controller/2.7.x/guides/using-kongplugin-resource/
+
+# kubectl apply -f crd.yml
+
+# curl $(minikube ip):30767 -H 'host: kong.test' -i
+# curl $(minikube ip):30767 -H 'host: kong.dev' -i
+# curl $(minikube ip):30767 -H 'host: kong.ops' -i
+
+# curl $(minikube ip):30767 -H 'host: kong.ops' -d '1234567890' -i
+
+---
+
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: kong-add-resp-header-plugin
+
+plugin: response-transformer
+config:
+  add:
+    headers:
+    - Resp-New-Header:kong-kic
+
+---
+
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: kong-request-size-limiting-plugin
+
+plugin: request-size-limiting
+config:
+  allowed_payload_size: 8
+  size_unit: bytes
+
+---
+
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: kong-rate-limiting-plugin
+
+plugin: rate-limiting
+config:
+  minute: 2
+
+---
+
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: kong-key-auth-plugin
+
+plugin: key-auth
+config:
+  key_names:
+  - kong-apikey
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kong-ing
+  annotations:
+    konghq.com/host-aliases: "kong.dev, kong.ops"
+    konghq.com/plugins: |
+        kong-add-resp-header-plugin,
+        kong-request-size-limiting-plugin,
+        kong-rate-limiting-plugin
+
+spec:
+  ingressClassName: kong-ink
+
+  rules:
+  - host: kong.test
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ngx-svc
+            port:
+              number: 80
+---
