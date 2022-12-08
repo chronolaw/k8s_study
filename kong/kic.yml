@@ -109,7 +109,7 @@ spec:
         - name: CONTROLLER_KONG_ADMIN_TLS_SKIP_VERIFY
           value: "true"
         - name: CONTROLLER_PUBLISH_SERVICE
-          value: kong/ingress-kong-proxy
+          value: kong/ingress-kong-svc
         - name: POD_NAME
           valueFrom:
             fieldRef:
@@ -172,7 +172,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ingress-kong-proxy
+  name: ingress-kong-svc
   namespace: kong
 spec:
   ports:
