@@ -69,8 +69,8 @@ metadata:
     konghq.com/host-aliases: "kong.dev, kong.ops"
     konghq.com/plugins: |
         kong-add-resp-header-plugin,
-        kong-request-size-limiting-plugin,
-        kong-rate-limiting-plugin
+        kong-request-size-limiting-plugin
+        #kong-rate-limiting-plugin
 
 spec:
   ingressClassName: kong-ink
