@@ -68,7 +68,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 * [gateway](https://gateway-api.sigs.k8s.io/)
 * [persistent-volumes](https://kubernetes.io/zh/docs/concepts/storage/persistent-volumes/)
 
-## Blogs
+## Releases
 
 * [v1.27 release](https://kubernetes.io/blog/2023/04/11/kubernetes-v1-27-release/)
 * [v1.26 release](https://kubernetes.io/blog/2022/12/09/kubernetes-v1-26-release/)
@@ -78,6 +78,7 @@ worker node | >= 1| >= 1GB | >= 20GB
 * [v1.21 release](https://kubernetes.io/blog/2021/04/08/kubernetes-1-21-release-announcement/)
 * [v1.20 release](https://kubernetes.io/blog/2020/12/08/kubernetes-1-20-release-announcement/)
 
+## Blogs
 
 * [k8s.gcr.io Image Registry Will Be Frozen From the 3rd of April 2023](https://kubernetes.io/blog/2023/02/06/k8s-gcr-io-freeze-announcement/)
 * [don't panic kubernetes and docker](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/)
