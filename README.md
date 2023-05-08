@@ -70,11 +70,16 @@ worker node | >= 1| >= 1GB | >= 20GB
 
 ## Blogs
 
+* [v1.27 release](https://kubernetes.io/blog/2023/04/11/kubernetes-v1-27-release/)
+* [v1.26 release](https://kubernetes.io/blog/2022/12/09/kubernetes-v1-26-release/)
 * [v1.24 release](https://kubernetes.io/blog/2022/05/03/kubernetes-1-24-release-announcement/)
 * [v1.23 release](https://kubernetes.io/blog/2021/12/07/kubernetes-1-23-release-announcement/)
 * [v1.22 release](https://kubernetes.io/blog/2021/08/04/kubernetes-1-22-release-announcement/)
 * [v1.21 release](https://kubernetes.io/blog/2021/04/08/kubernetes-1-21-release-announcement/)
 * [v1.20 release](https://kubernetes.io/blog/2020/12/08/kubernetes-1-20-release-announcement/)
+
+
+* [k8s.gcr.io Image Registry Will Be Frozen From the 3rd of April 2023](https://kubernetes.io/blog/2023/02/06/k8s-gcr-io-freeze-announcement/)
 * [don't panic kubernetes and docker](https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/)
 * [Evolving Kubernetes networking with the Gateway API](https://kubernetes.io/blog/2021/04/22/evolving-kubernetes-networking-with-the-gateway-api/)
 
