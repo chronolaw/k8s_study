@@ -1,6 +1,10 @@
-# chrono @ 2022-09
+# chrono @ 2023-11
 
-# kubectl apply -f ngx-deploy.yml
+# kubectl apply -f backend.yml
+# sed 's/ngx/red/g'   backend.yml | kubectl apply -f -
+# sed 's/ngx/green/g' backend.yml | kubectl apply -f -
+# sed 's/ngx/blue/g'  backend.yml | kubectl apply -f -
+# sed 's/ngx/black/g' backend.yml | kubectl apply -f -
 
 ---
 
@@ -17,7 +21,7 @@ data:
       location / {
         default_type text/plain;
         return 200
-          'srv : $server_addr:$server_port\nhost: $hostname\nuri : $request_method $host $request_uri\ndate: $time_iso8601\n';
+          'ngx\nsrv : $server_addr:$server_port\nhost: $hostname\nuri : $request_method $host $request_uri\n';
       }
     }
 
@@ -31,7 +35,7 @@ metadata:
     app: ngx-dep
 
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: ngx-dep
@@ -73,4 +77,3 @@ spec:
     targetPort: 80
 
 ---
-

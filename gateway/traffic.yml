@@ -1,0 +1,65 @@
+# chrono @ 2023-11
+
+# curl -i $(minikube ip):32686 -H 'host: canary.test'
+# curl -i $(minikube ip):32686/login -H 'host: canary.test'
+
+# curl -i $(minikube ip):32686 -H 'host: blue-green.test'
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ngx-canary-route
+spec:
+  parentRefs:
+  - name: kong-gtw
+  hostnames:
+  - "canary.test"
+
+  rules:
+
+  # most traffic
+  - backendRefs:
+    - name: blue-svc
+      port: 80
+
+  # less traffic
+  - matches:
+    - headers:
+      - name: traffic
+        value: canary
+    - path:
+        type: Exact
+        value: /login
+    backendRefs:
+    - name: green-svc
+      port: 80
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ngx-blue-green-route
+spec:
+  parentRefs:
+  - name: kong-gtw
+  hostnames:
+  - "blue-green.test"
+  rules:
+
+  - backendRefs:
+
+    # blue version
+    - name: blue-svc
+      port: 80
+      weight: 50
+
+    # green version
+    - name: green-svc
+      port: 80
+      weight: 50
+
+---
+

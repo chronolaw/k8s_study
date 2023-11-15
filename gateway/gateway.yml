@@ -1,0 +1,44 @@
+# chrono @ 2023-11
+
+# minikube start --kubernetes-version=v1.28.3
+# kubectl version
+
+# install gateway api into k8s
+# wget https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.0.0/standard-install.yaml
+# kubectl apply -f standard-install.yaml
+
+# create gc/gtw
+# kubectl apply -f gateway.yml
+
+# helm install kong
+
+# kubectl get svc -n kong kong-gateway-proxy
+# curl -i $(minikube ip):32191
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: kong-gc
+  annotations:
+    konghq.com/gatewayclass-unmanaged: 'true'
+
+spec:
+  controllerName: konghq.com/kic-gateway-controller
+
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: kong-gtw
+spec:
+  gatewayClassName: kong-gc
+  listeners:
+  - name: proxy
+    port: 80
+    protocol: HTTP
+
+---
+
